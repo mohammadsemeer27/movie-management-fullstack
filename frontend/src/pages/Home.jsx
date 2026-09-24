@@ -23,7 +23,7 @@ function Home() {
 
       const data = await getMovies();
 
-      setMovies(data);
+      setMovies(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Failed to load movies:", error);
       setError(error.message || "Failed to load movies");
