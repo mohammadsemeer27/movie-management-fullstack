@@ -1,3 +1,4 @@
+
 # 🎬 Movie Management System
 
 A full-stack Movie Management System built with **React, Vite, Go, PostgreSQL, Redis, and JWT authentication**.

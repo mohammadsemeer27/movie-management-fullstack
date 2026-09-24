@@ -1192,13 +1192,58 @@ func watchHistoryHandler(db *sql.DB) http.HandlerFunc {
 }
 
 // =========================
+// CORS Middleware
+// =========================
+
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		origin := r.Header.Get("Origin")
+
+		allowedOrigin := os.Getenv("FRONTEND_URL")
+
+		// Allow local development
+		if origin == "http://localhost:5173" ||
+			origin == "http://localhost:5174" {
+			allowedOrigin = origin
+		}
+
+		// Allow deployed frontend
+		if origin != "" && origin == os.Getenv("FRONTEND_URL") {
+			allowedOrigin = origin
+		}
+
+		if allowedOrigin != "" {
+			w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
+		}
+
+		w.Header().Set(
+			"Access-Control-Allow-Methods",
+			"GET, POST, DELETE, OPTIONS",
+		)
+
+		w.Header().Set(
+			"Access-Control-Allow-Headers",
+			"Content-Type, Authorization",
+		)
+
+		// Handle browser preflight requests
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+// =========================
 // MAIN
 // =========================
 func main() {
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using environment variables")
 	}
 
 	jwtSecret = []byte(os.Getenv("JWT_SECRET"))
@@ -1455,9 +1500,18 @@ func main() {
 	// Start Server
 	// =========================
 
-	fmt.Println("Server running on http://localhost:8080")
+	port := os.Getenv("PORT")
 
-	err = http.ListenAndServe(":8080", nil)
+	if port == "" {
+		port = "8080"
+	}
+
+	fmt.Println("Server running on port", port)
+
+	err = http.ListenAndServe(
+		":"+port,
+		corsMiddleware(http.DefaultServeMux),
+	)
 
 	if err != nil {
 		log.Fatal("Server failed:", err)

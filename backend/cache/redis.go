@@ -13,9 +13,20 @@ var RedisClient *redis.Client
 var Ctx = context.Background()
 
 func ConnectRedis() error {
-	RedisClient = redis.NewClient(&redis.Options{
-		Addr: os.Getenv("REDIS_ADDR"),
-	})
+	redisURL := os.Getenv("REDIS_URL")
+
+	if redisURL != "" {
+		opt, err := redis.ParseURL(redisURL)
+		if err != nil {
+			return err
+		}
+
+		RedisClient = redis.NewClient(opt)
+	} else {
+		RedisClient = redis.NewClient(&redis.Options{
+			Addr: os.Getenv("REDIS_ADDR"),
+		})
+	}
 
 	_, err := RedisClient.Ping(Ctx).Result()
 
