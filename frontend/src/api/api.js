@@ -60,6 +60,26 @@ export async function getMovies() {
   return data;
 }
 
+
+export async function getMovie(movieId) {
+  const response = await fetch(`${API_URL}/movies/${movieId}`);
+
+  const text = await response.text();
+
+  let data;
+
+  try {
+    data = JSON.parse(text);
+  } catch {
+    data = { message: text };
+  }
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to fetch movie");
+  }
+
+  return data;
+}
 export async function getShowTimings(movieId) {
   const response = await fetch(
     `${API_URL}/movies/${movieId}/show-times`

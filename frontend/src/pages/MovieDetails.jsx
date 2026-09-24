@@ -11,7 +11,12 @@ import {
 
 import toast from "react-hot-toast";
 
-import { getShowTimings, markMovieAsWatched } from "../api/api";
+import {
+  getMovie,
+  getShowTimings,
+  markMovieAsWatched,
+} from "../api/api";
+
 import { useAuth } from "../context/AuthContext";
 
 function MovieDetails() {
@@ -33,27 +38,13 @@ function MovieDetails() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(`/api/movies/${id}`);
-
-        const text = await response.text();
-
-        let data;
-
-        try {
-          data = JSON.parse(text);
-        } catch {
-          data = { message: text };
-        }
-
-        if (!response.ok) {
-          throw new Error(
-            data.message || "Failed to load movie"
-          );
-        }
+        const data = await getMovie(id);
 
         setMovie(data);
       } catch (error) {
         console.error("Movie loading error:", error);
+
+        setMovie(null);
         setError(error.message || "Failed to load movie");
       } finally {
         setLoading(false);
@@ -67,7 +58,6 @@ function MovieDetails() {
 
         const data = await getShowTimings(id);
 
-        // Always keep showTimings as an array
         setShowTimings(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Show timings error:", error);
