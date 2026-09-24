@@ -48,26 +48,25 @@ function Admin() {
 
     loadAdminData();
   }, [user]);
+async function loadAdminData() {
+  try {
+    setLoading(true);
+    setError("");
 
-  async function loadAdminData() {
-    try {
-      setLoading(true);
-      setError("");
+    const [movieData, userData] = await Promise.all([
+      getMovies(),
+      getAdminUsers(token),
+    ]);
 
-      const [movieData, userData] = await Promise.all([
-        getMovies(),
-        getAdminUsers(token),
-      ]);
-
-      setMovies(movieData);
-      setUsers(userData);
-    } catch (error) {
-      console.error("Admin data error:", error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
+    setMovies(Array.isArray(movieData) ? movieData : []);
+setUsers(Array.isArray(userData) ? userData : []);
+  } catch (error) {
+    console.error("Admin data error:", error);
+    setError(error.message);
+  } finally {
+    setLoading(false);
   }
+}
 
   function handleChange(e) {
     setFormData({
