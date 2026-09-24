@@ -1,9 +1,28 @@
-
 # 🎬 Movie Management System
 
-A full-stack Movie Management System built with **React, Vite, Go, PostgreSQL, Redis, and JWT authentication**.
+A full-stack Movie Management System built with React, Vite, Tailwind CSS, Golang, PostgreSQL, Redis, and JWT Authentication.
 
-The application allows users to browse and search movies, view show timings, maintain watch history, and securely authenticate. Administrators can manage movies, show timings, and users through a dedicated admin dashboard.
+The application allows users to browse movies, search movies, view movie details and show timings, maintain watch history, while administrators can manage movies, users, and show timings through a protected Admin Dashboard.
+
+## 🌐 Live Demo
+
+🚀 **Movie Management System:**  
+https://movie-management-fullstack.vercel.app
+
+🔗 **GitHub Repository:**  
+https://github.com/mohammadsemeer27/movie-management-fullstack
+
+---
+
+## 📌 Project Overview
+
+The Movie Management System is a full-stack web application designed to manage movies, users, show timings, and watch history.
+
+The application provides separate functionality for normal users and administrators.
+
+Users can browse and search movies, view movie information, check show timings, mark movies as watched, and view their watch history.
+
+Administrators can manage movies, users, and show timings through a protected Admin Dashboard.
 
 ---
 
@@ -12,48 +31,51 @@ The application allows users to browse and search movies, view show timings, mai
 ### 👤 User Features
 
 - User registration
-- User login and JWT authentication
-- Browse all movies
+- User login
+- JWT-based authentication
+- Secure password hashing using bcrypt
+- Browse movies
 - Search movies
 - View movie details
-- View available show timings
+- View show timings
 - Mark movies as watched
 - View personal watch history
-- Secure logout
-- Responsive UI
-- Toast notifications
+- View user profile
+- Logout functionality
+- Responsive user interface
 
-### 🛠️ Admin Features
+### 🔐 Admin Features
 
+- Protected Admin Dashboard
 - Admin authentication
-- Admin dashboard
-- View total movies and users
-- Add movies
-- Delete movies
-- Add movie show timings
+- View total movies
+- View total users
 - View all registered users
-- Role-based access control
+- Add new movies
+- Delete movies
+- Add show timings
+- Manage movie information
+- Manage show schedules
 
 ### ⚡ Performance & Security
 
-- PostgreSQL database
 - Redis caching for movie data
-- JWT-based authentication
-- Password hashing using bcrypt
-- Protected admin routes
-- Protected user routes
-- Environment variables for sensitive configuration
-- RESTful API architecture
+- PostgreSQL database
+- JWT authentication
+- bcrypt password hashing
+- Role-based authorization
+- Admin-only protected endpoints
+- CORS configuration
+- Environment variable configuration
 
 ---
 
-## 🧰 Tech Stack
+## 🛠️ Tech Stack
 
 ### Frontend
 
 - React
 - Vite
-- JavaScript
 - Tailwind CSS
 - React Router
 - React Hot Toast
@@ -61,26 +83,54 @@ The application allows users to browse and search movies, view show timings, mai
 
 ### Backend
 
-- Go
+- Golang
+- net/http
 - REST API
-- PostgreSQL
-- Redis
 - JWT
 - bcrypt
-- godotenv
+
+### Database
+
+- PostgreSQL
+
+### Cache
+
+- Redis / Valkey
+
+### Deployment
+
+- Vercel
+- Render
+- PostgreSQL
+- Redis / Valkey
 
 ### Development Tools
 
 - Git
 - GitHub
+- Linux
 - VS Code
-- Postman / cURL
 
 ---
 
-## 🏗️ Project Structure
+## 🏗️ Project Architecture
 
 ```text
+                    Movie Management System
+                              │
+               ┌──────────────┴──────────────┐
+               │                             │
+          React Frontend                Go Backend
+               │                             │
+               │                       REST API
+               │                             │
+               │                ┌────────────┴────────────
+               │                │                         │
+               │          PostgreSQL                  Redis
+               │                │                         │
+               └────────────────┴─────────────────────────┘
+
+
 movie-management-fullstack/
 │
 ├── backend/
@@ -93,28 +143,34 @@ movie-management-fullstack/
 │   ├── main.go
 │   ├── go.mod
 │   ├── go.sum
-│   ├── .env
-│   └── README.md
+│   └── .env
 │
 ├── frontend/
 │   ├── public/
+│   │
 │   ├── src/
 │   │   ├── api/
 │   │   │   └── api.js
+│   │   │
 │   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   └── ShowTimingManager.jsx
+│   │   │
 │   │   ├── context/
 │   │   │   └── AuthContext.jsx
-│   │   └── pages/
-│   │       ├── Admin.jsx
-│   │       ├── Home.jsx
-│   │       ├── Login.jsx
-│   │       ├── MovieDetails.jsx
-│   │       ├── Profile.jsx
-│   │       └── Register.jsx
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── Home.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── MovieDetails.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   ├── Admin.jsx
+│   │   │   └── WatchHistory.jsx
+│   │   │
+│   │   ├── App.jsx
+│   │   └── main.jsx
 │   │
 │   ├── package.json
 │   └── vite.config.js
 │
-└── README.md
+├── README.md
+└── .gitignore
